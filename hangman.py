@@ -5,6 +5,7 @@ import random
 import string
 import json
 import functools
+stdscr = curses.initscr()
 
 """Use this function to input a custom word then choose option "C" When playing the game"""
 def custom_word():
@@ -18,13 +19,15 @@ def erase_menu(stdscr, menu_y):
 
 # Displays the menu at the beginning of the game.
 def display_menu(stdscr, menu_y):
-    erase_menu(stdscr, menu_y)
-    stdscr.addstr(menu_y +0, 30, '1.) "E" -- EASY MODE')
-    stdscr.addstr(menu_y +1, 30, '2.) "A" -- AVERAGE MODE')
-    stdscr.addstr(menu_y +2, 30, '3.) "H" -- HARD MODE')
-    stdscr.addstr(menu_y +3, 30, '4.) "C" -- CUSTOM WORD')   
-    stdscr.addstr(menu_y +4, 30, '5.) "Q" -- PRESS "Q" TO QUIT')
-    
+    try:
+        erase_menu(stdscr, menu_y)
+        stdscr.addstr(menu_y +0, 30, '1.) "E" -- EASY MODE')
+        stdscr.addstr(menu_y +1, 30, '2.) "A" -- AVERAGE MODE')
+        stdscr.addstr(menu_y +2, 30, '3.) "H" -- HARD MODE')
+        stdscr.addstr(menu_y +3, 30, '4.) "C" -- CUSTOM WORD')   
+        stdscr.addstr(menu_y +4, 30, '5.) "Q" -- PRESS "Q" TO QUIT')
+    except:
+        pass
     
 
 # Draws the hangman tree in ascii
@@ -247,7 +250,7 @@ def print_board(stdscr):
     c = stdscr.getkey(1,1)  #get key from the user
     stdscr.addstr(c)
     c = c.upper()
-    
+
     if c =='E': #Easy mode
         word = easy_list() 
     if c == 'A':
@@ -258,16 +261,19 @@ def print_board(stdscr):
         word = custom_word()
     if c == 'Q':
         exit()
-
+    if (c !='E') or (c !='A') or (c !='H') or (c !='C') or (c !='Q'):
+        c == 'E'
+        word = easy_list()  
+        
     # clears the menu on game start
     erase_menu(stdscr, menu_y)
     
-    # draws the game and prompts for inpute
+    # draws the game and prompts for input
     draw_game(stdscr)
     stdscr.addstr(18, 10, 'Choose a letter in the word')
     stdscr.move(20, 15)
 
-    stdscr.addstr('_'*len(word))
+    stdscr.addstr('_' * len(word))
     stdscr.refresh()
     gameloop(stdscr, word)
 
